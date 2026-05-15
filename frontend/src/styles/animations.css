@@ -1,0 +1,50 @@
+/* ---------------------------------------------------
+   GLOBAL FADE-IN SYSTEM (unified for all components)
+   - fade-in: standard
+   - fade-in-slow: softer entrance
+   - fade-in-fast: snappier entrance
+   - fade-in-stagger: for grids/lists
+----------------------------------------------------*/
+
+/* Base fade-in */
+.fade-in {
+  opacity: 0;
+  transform: translateY(12px);
+  animation: fadeInUnified 0.45s ease-out forwards;
+}
+
+/* Slightly slower fade-in */
+.fade-in-slow {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeInUnified 0.7s ease-out forwards;
+}
+
+/* Faster fade-in */
+.fade-in-fast {
+  opacity: 0;
+  transform: translateY(8px);
+  animation: fadeInUnified 0.28s ease-out forwards;
+}
+
+/* Staggered fade-in for card grids */
+.fade-in-stagger > * {
+  opacity: 0;
+  transform: translateY(14px);
+  animation: fadeInUnified 0.45s ease-out forwards;
+}
+
+.fade-in-stagger > *:nth-child(1) { animation-delay: 0.05s; }
+.fade-in-stagger > *:nth-child(2) { animation-delay: 0.10s; }
+.fade-in-stagger > *:nth-child(3) { animation-delay: 0.15s; }
+.fade-in-stagger > *:nth-child(4) { animation-delay: 0.20s; }
+.fade-in-stagger > *:nth-child(5) { animation-delay: 0.25s; }
+.fade-in-stagger > *:nth-child(6) { animation-delay: 0.30s; }
+
+/* Keyframes (shared across all animations) */
+@keyframes fadeInUnified {
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}

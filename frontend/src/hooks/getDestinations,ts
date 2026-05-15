@@ -1,0 +1,7 @@
+import { Destination } from "../types/Destination";
+
+export async function getDestinations(): Promise<Destination[]> {
+  const res = await fetch(`/api/destinations`);
+  if (!res.ok) throw new Error("Failed to fetch destinations");
+  return res.json();
+}

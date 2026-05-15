@@ -1,0 +1,159 @@
+/* GLOBAL */
+:root {
+  --brand-primary: #0a3d62;      /* Deep ocean blue */
+  --brand-secondary: #3c6382;    /* Lighter reef blue */
+  --brand-accent: #38ada9;       /* Tropical teal */
+  --brand-highlight: #82ccdd;    /* Shallow water blue */
+  --brand-text-light: #ffffff;
+  --brand-text-dark: #1e272e;
+}
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background: #f5f7fa;
+  color: #222;
+}
+
+/* NAVBAR */
+.navbar {
+  display: flex;
+  gap: 20px;
+  padding: 15px;
+  background: #0077cc;
+}
+
+.navbar a {
+  color: white;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+/* CAROUSEL */
+.carousel {
+  display: flex;
+  overflow-x: auto;
+  gap: 20px;
+  padding: 20px;
+}
+
+.carousel-item img {
+  width: 300px;
+  border-radius: 10px;
+}
+
+/* GRID */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 1.5rem;
+  padding: 1rem;
+}
+
+/* CARD */
+.card {
+  display: flex;
+  flex-direction: column;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  text-decoration: none;
+  color: inherit;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+  display: block;
+}
+
+/* FIX: ensure text is visible */
+.card h3 {
+  margin: 0;
+  padding: 1rem;
+  font-size: 1.2rem;
+  color: #222;        /* FORCE visible text */
+  background: white;  /* ensure contrast */
+  z-index: 2;
+}
+.details-container {
+  padding: 20px;
+  max-width: 900px;
+  margin: auto;
+}
+
+.details-title {
+  font-size: 2rem;
+  margin-bottom: 10px;
+}
+
+.details-hero img {
+  width: 100%;
+  border-radius: 12px;
+  margin-bottom: 20px;
+}
+
+.details-section {
+  margin-bottom: 28px;
+}
+
+.fishlife-bar {
+  width: 100%;
+  height: 12px;
+  background: #e0e0e0;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.fishlife-fill {
+  height: 100%;
+  background: #2ecc71;
+}
+
+.storm-risk {
+  font-weight: bold;
+}
+
+.storm-timeline {
+  display: flex;
+  gap: 6px;
+  margin-top: 10px;
+}
+
+.storm-dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+}
+
+.level-1 { background: #2ecc71; }
+.level-2 { background: #f1c40f; }
+.level-3 { background: #e67e22; }
+.level-4 { background: #e74c3c; }
+
+.gallery-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
+  gap: 10px;
+}
+
+.gallery-grid img {
+  width: 100%;
+  border-radius: 8px;
+}
+
+.details-footer {
+  margin-top: 30px;
+  text-align: center;
+}
+
+.details-footer a {
+  display: inline-block;
+  padding: 12px 20px;
+  background: #0078ff;
+  color: white;
+  border-radius: 8px;
+  text-decoration: none;
+}
