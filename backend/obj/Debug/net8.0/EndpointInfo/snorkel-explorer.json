@@ -696,9 +696,9 @@
             "type": "integer",
             "format": "int32"
           },
-          "month": {
-            "type": "string",
-            "nullable": true
+          "destinationId": {
+            "type": "integer",
+            "format": "int32"
           },
           "score": {
             "type": "integer",
