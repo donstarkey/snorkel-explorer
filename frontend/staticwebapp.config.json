@@ -6,4 +6,6 @@
       "rewrite": "https://snorkel-explorer-api.azurewebsites.net/api/{*path}"
     }
   ]
+  
 }
+
