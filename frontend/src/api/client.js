@@ -17,3 +17,4 @@ export async function uploadImage(formData) {
   });
   return res.json();
 }
+
