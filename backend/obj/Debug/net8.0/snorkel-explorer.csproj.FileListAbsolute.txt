@@ -150,3 +150,4 @@ C:\projects\snorkel-explorer\backend\obj\Debug\net8.0\snorkel-explorer.pdb
 C:\projects\snorkel-explorer\backend\obj\Debug\net8.0\snorkel-explorer.genruntimeconfig.cache
 C:\projects\snorkel-explorer\backend\obj\Debug\net8.0\ref\snorkel-explorer.dll
 C:\projects\snorkel-explorer\backend\obj\Debug\net8.0\snorkel-explorer.sourcelink.json
+C:\projects\snorkel-explorer\backend\bin\Debug\net8.0\appsettings.Development.json
