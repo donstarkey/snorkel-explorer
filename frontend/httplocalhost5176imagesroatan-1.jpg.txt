@@ -1,0 +1,9 @@
+http://localhost:5176/images/roatan-1.jpg
+
+The Roatán Blue Channel is a popular dive and snorkel site located just off the shore of West End Village on the northwest side of Roatán, Honduras. It is a natural break in the reef crest, situated roughly 200 yards out, west of Tita’s Pink Seahorse and near the Luna Beach Resort.Key Details About Blue Channel:Location: West End, parallel to the shore, easily accessed by boat from West End Village or as a long swim from shore.Depth: The site is relatively shallow, with the channel floor around 30 feet, and a reef ridge sloping from 10 to 45 feet.Features: Famous for its swim-throughs, coral walls, and marine life like damselfish, moray eels, and school of silversides (often seen in Aug/Sept).Landmark: It is located directly west of Tita's Pink Seahorse and is frequently visited from nearby locations like Blue Bahia.
+
+
+ENOENT: no such file or directory, open 'C:\projects\snorkel-explorer\frontend\tsconfig.node.json'
+
+
+Server=tcp:snorkelexplorer-sq.database.windows.net,1433;Initial Catalog=snorkelexplorer-db;Persist Security Info=False;User ID=snorkelowner;Password=Sn0rkel2026!;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;

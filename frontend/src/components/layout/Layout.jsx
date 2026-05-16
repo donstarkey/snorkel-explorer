@@ -1,9 +1,10 @@
 // src/components/layout/Layout.jsx
 import { useState } from "react";
+import { Outlet } from "react-router-dom";
 import Header from "./Header";
 import Sidebar from "./Sidebar";
 
-export default function Layout({ children }) {
+export default function Layout() {
   const [isOpen, setIsOpen] = useState(false);
 
   return (
@@ -13,8 +14,9 @@ export default function Layout({ children }) {
       <Sidebar isOpen={isOpen} onClose={() => setIsOpen(false)} />
 
       <main style={{ padding: "1.5rem", marginTop: "60px" }}>
-        {children}
+        <Outlet />
       </main>
     </div>
   );
 }
+

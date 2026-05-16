@@ -10,15 +10,16 @@ import UploadPage from './routes/UploadPage'
 
 export default function App() {
   return (
-    <Layout>
-      <Routes>
+    <Routes>
+      <Route element={<Layout />}>
         <Route path="/" element={<Home />} />
         <Route path="/destinations" element={<Destinations />} />
         <Route path="/destinations/:id" element={<DestinationDetails />} />
         <Route path="/top10" element={<Top10 />} />
         <Route path="/map" element={<MapPage />} />
         <Route path="/upload" element={<UploadPage />} />
-      </Routes>
-    </Layout>
+      </Route>
+    </Routes>
   )
 }
+
