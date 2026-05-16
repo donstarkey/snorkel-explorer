@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("snorkel-explorer")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Release")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9ee921e7d9c06af1502acf91a3cf07b8dd703517")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+1bd90ee4467700006bfea90527cf5a3e5552b52c")]
 [assembly: System.Reflection.AssemblyProductAttribute("snorkel-explorer")]
 [assembly: System.Reflection.AssemblyTitleAttribute("snorkel-explorer")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]
