@@ -1,18 +1,18 @@
-const API_BASE = import.meta.env.VITE_API_BASE_URL;
+const API_BASE = import.meta.env.VITE_API_BASE;
 
 
 export async function getDestinations() {
-  const res = await fetch(`${API_BASE}/api/Destinations`);
+  const res = await fetch(`${API_BASE}/Destinations`);
   return res.json();
 }
 
 export async function getDestination(id) {
-  const res = await fetch(`${API_BASE}/api/Destinations/${id}`);
+  const res = await fetch(`${API_BASE}/Destinations/${id}`);
   return res.json();
 }
 
 export async function uploadImage(formData) {
-  const res = await fetch(`${API_BASE}/api/Images/uploadtest`, {
+  const res = await fetch(`${API_BASE}/Images/uploadtest`, {
     method: 'POST',
     body: formData
   });
