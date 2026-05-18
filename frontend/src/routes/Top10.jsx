@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import DestinationCard from "../components/DestinationCard";
+const API = import.meta.env.VITE_API_URL;
 import "../styles/Destinations.css"; // shared grid + layout styles
 
 export default function Top10() {
@@ -8,7 +9,8 @@ export default function Top10() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch("/api/Destinations");
+        
+        const res = await fetch(API_BASE + "/api/destinations");
         const data = await res.json();
         setList(data);
       } catch (err) {
