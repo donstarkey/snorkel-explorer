@@ -1,5 +1,6 @@
 import { useEffect, useState, useCallback } from "react";
 import { useParams, Link } from "react-router-dom";
+const API = import.meta.env.VITE_API_URL;
 import "../styles/DestinationDetails.css";
 import useEmblaCarousel from "embla-carousel-react";
 
@@ -37,7 +38,7 @@ export default function DestinationDetails() {
   useEffect(() => {
     async function load() {
       try {
-        const res = await fetch(`/api/destinations/${id}`);
+        const res = await fetch(fetch(`${API}/api/Destinations/${id}`));
         const data = await res.json();
         setDestination(data);
       } catch (err) {
@@ -180,7 +181,8 @@ export default function DestinationDetails() {
                     {destination.gallery.map((img, i) => (
                       <div className="embla__slide" key={i}>
                         <img
-                          src={`${API_BASE}${img}`}
+                          //src={`${API_BASE}${img}`}                          
+                          src={`${API}${img}`}
                           alt=""
                           className="embla__slide__img"
                         />
