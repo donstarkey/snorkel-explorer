@@ -10,7 +10,7 @@ export default function Top10() {
     async function load() {
       try {
         
-        const res = await fetch(API_BASE + "/api/destinations");
+        const res = await fetch(`${API}/api/Destinations`);
         const data = await res.json();
         setList(data);
       } catch (err) {
