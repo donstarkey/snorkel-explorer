@@ -7,6 +7,8 @@ import ImageCarousel from "../components/ImageCarousel";
 import ImageModal from "../components/ImageModal";
 import ConditionsTab from "../components/ConditionsTab";
 import SnorkelMap from "../components/SnorkelMap";
+// Add this import alongside the others at the top
+import { videoMap } from "../data/videoMap"; // serving youtube videos
 import "../styles/DestinationDetails.css";
 import "../styles/QuickLinkTabs.css";
 
@@ -20,17 +22,17 @@ export default function DestinationDetails() {
   const [modalImages, setModalImages] = useState([]);
 
   const openModal = (images, startIndex) => {
-  setModalImages(images);
-  setModalIndex(startIndex);
-};
+    setModalImages(images);
+    setModalIndex(startIndex);
+  };
 
-const closeModal = () => setModalIndex(null);
+  const closeModal = () => setModalIndex(null);
 
-const navigateModal = (i) => {
-  if (i < 0) i = modalImages.length - 1;
-  if (i >= modalImages.length) i = 0;
-  setModalIndex(i);
-};
+  const navigateModal = (i) => {
+    if (i < 0) i = modalImages.length - 1;
+    if (i >= modalImages.length) i = 0;
+    setModalIndex(i);
+  };
 
 
   const { data: destination, isLoading, error } = useQuery({
@@ -61,6 +63,16 @@ const navigateModal = (i) => {
           <span className="qi-icon">🛈</span>
           Overview
         </button>
+
+        <button onClick={() => setTab("videos")}>
+          <span className="qi-icon">🎬</span>
+          Videos
+          {(videoMap[destination.id]?.length ?? 0) > 0
+            ? <span className="video-badge">{videoMap[destination.id].length}</span>
+            : <span className="video-badge video-badge--soon">•</span>
+          }
+        </button>
+
 
         <button onClick={() => setTab("conditions")}>
           <span className="qi-icon">🌤</span>
@@ -97,6 +109,14 @@ const navigateModal = (i) => {
         <button onClick={() => setTab("overview")} className={tab === "overview" ? "active" : ""}>Overview</button>
         <button onClick={() => setTab("showcase")} className={tab === "showcase" ? "active" : ""}>Showcase</button>
         <button onClick={() => setTab("gallery")} className={tab === "gallery" ? "active" : ""}>Gallery</button>
+        <button onClick={() => setTab("videos")} className={tab === "videos" ? "active" : ""}>
+          Videos
+          {(videoMap[destination.id]?.length ?? 0) > 0
+            ? <span className="video-badge">{videoMap[destination.id].length}</span>
+            : <span className="video-badge video-badge--soon">•</span>
+          }
+        </button>
+
         <button onClick={() => setTab("fish")} className={tab === "fish" ? "active" : ""}>FishLife</button>
         <button onClick={() => setTab("conditions")} className={tab === "conditions" ? "active" : ""}>Conditions</button>
         <button onClick={() => setTab("reports")} className={tab === "reports" ? "active" : ""}>Reports</button>
@@ -111,13 +131,56 @@ const navigateModal = (i) => {
 
           {destination.guide && (
             <div className="details-section">
-              <h2>Guide Notes</h2>
+              <div className="guide-notes-header">
+                <h2>Guide Notes</h2>
+                <button onClick={() => setTab("videos")}>
+                  🎬 Watch Videos →
+                </button>
+              </div>
               <p>{destination.guide}</p>
             </div>
           )}
         </div>
       )}
 
+      {/* VIDEO SECTION */}
+      {/*       {(() => {
+        const videoIds = videoMap[destination.id] ?? [];
+        return videoIds.length > 0 ? (
+          <div className="details-section details-videos">
+            <h2>🤿 Snorkel Explorer Videos</h2>
+            {videoIds.map(id => (
+              <div key={id} className="details-video-embed">
+                <iframe
+                  width="100%"
+                  style={{ aspectRatio: "16/9", border: "none", borderRadius: "10px" }}
+                  src={`https://www.youtube.com/embed/${id}`}
+                  title={`${destination.name} — Snorkel Explorer`}
+                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  allowFullScreen
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <div className="details-video-soon">
+            <div className="dvs-icon">🤿</div>
+            <p className="dvs-title">Video guide coming soon</p>
+            <p className="dvs-sub">
+              We're heading to {destination.name} — subscribe to be the first to see it.
+            </p>
+            <a
+              href="https://www.youtube.com/@SnorkelExplorer"
+              target="_blank"
+              rel="noreferrer"
+              className="dvs-cta"
+            >
+              Subscribe on YouTube →
+            </a>
+          </div>
+        );
+      })()}
+ */}
       {/* SHOWCASE */}
       {tab === "showcase" && (
         <div className="tab-content fade-in">
@@ -145,6 +208,47 @@ const navigateModal = (i) => {
             showThumbnails={true}
             onImageClick={(i) => openModal(gallery.map(url => ({ url })), i)}
           />
+        </div>
+      )}
+      {/* VIDEOS */}
+      {tab === "videos" && (
+        <div className="tab-content fade-in">
+          {(() => {
+            const videoIds = videoMap[destination.id] ?? [];
+            return videoIds.length > 0 ? (
+              <div className="details-videos">
+                <h2>🤿 Snorkel Explorer Videos</h2>
+                {videoIds.map(id => (
+                  <div key={id} className="details-video-embed">
+                    <iframe
+                      width="100%"
+                      style={{ aspectRatio: "16/9", border: "none", borderRadius: "10px" }}
+                      src={`https://www.youtube.com/embed/${id}`}
+                      title={`${destination.name} — Snorkel Explorer`}
+                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                      allowFullScreen
+                    />
+                  </div>
+                ))}
+              </div>
+            ) : (
+              <div className="details-video-soon">
+                <div className="dvs-icon">🤿</div>
+                <p className="dvs-title">Video guide coming soon</p>
+                <p className="dvs-sub">
+                  We're heading to {destination.name} — subscribe to be the first to see it.
+                </p>
+                <a
+                  href="https://www.youtube.com/@SnorkelExplorer"
+                  target="_blank"
+                  rel="noreferrer"
+                  className="dvs-cta"
+                >
+                  Subscribe on YouTube →
+                </a>
+              </div>
+            );
+          })()}
         </div>
       )}
 
@@ -179,43 +283,43 @@ const navigateModal = (i) => {
       )}
 
       {/* SITES */}
-{/* SITES */}
-{tab === "sites" && (
-  <div className="tab-content fade-in sites-tab">
-    <h2>Snorkel Sites</h2>
+      {/* SITES */}
+      {tab === "sites" && (
+        <div className="tab-content fade-in sites-tab">
+          <h2>Snorkel Sites</h2>
 
-    {/* GRID OF SITE CARDS */}
-    <div className="sites-grid">
-      {destination.sites?.map((site, i) => (
-        <div key={i} className="site-card">
-          <h3>{site.name}</h3>
-          <p>{site.description}</p>
+          {/* GRID OF SITE CARDS */}
+          <div className="sites-grid">
+            {destination.sites?.map((site, i) => (
+              <div key={i} className="site-card">
+                <h3>{site.name}</h3>
+                <p>{site.description}</p>
 
-          <div className="site-meta">
-            <p><strong>Difficulty:</strong> {site.difficulty || "—"}</p>
-            <p><strong>Depth:</strong> {site.depth} ft</p>
-            <p><strong>Visibility:</strong> {site.visibility} ft</p>
+                <div className="site-meta">
+                  <p><strong>Difficulty:</strong> {site.difficulty || "—"}</p>
+                  <p><strong>Depth:</strong> {site.depth} ft</p>
+                  <p><strong>Visibility:</strong> {site.visibility} ft</p>
+                </div>
+              </div>
+            ))}
           </div>
+
+          {/* MAP OF SNORKEL SITES */}
+          {destination.sites?.length > 0 && (
+            <section className="sites-map-section">
+              <h2>Map of Snorkel Sites</h2>
+
+              <SnorkelMap
+                center={{
+                  lat: destination.sites[0].latitude,
+                  lng: destination.sites[0].longitude,
+                }}
+                sites={destination.sites}
+              />
+            </section>
+          )}
         </div>
-      ))}
-    </div>
-
-    {/* MAP OF SNORKEL SITES */}
-    {destination.sites?.length > 0 && (
-      <section className="sites-map-section">
-        <h2>Map of Snorkel Sites</h2>
-
-        <SnorkelMap
-          center={{
-            lat: destination.sites[0].latitude,
-            lng: destination.sites[0].longitude,
-          }}
-          sites={destination.sites}
-        />
-      </section>
-    )}
-  </div>
-)}
+      )}
 
 
       {/* MODAL img on click */}
