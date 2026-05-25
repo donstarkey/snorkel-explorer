@@ -7,6 +7,8 @@ import ImageCarousel from "../components/ImageCarousel";
 import ImageModal from "../components/ImageModal";
 import ConditionsTab from "../components/ConditionsTab";
 import SnorkelMap from "../components/SnorkelMap";
+import VideoEmbed from "../components/VideoEmbed";
+
 // Add this import alongside the others at the top
 import { videoMap } from "../data/videoMap"; // serving youtube videos
 import "../styles/DestinationDetails.css";
@@ -54,6 +56,8 @@ export default function DestinationDetails() {
     ?.filter(i => i.type === "Gallery")
     .map(i => resolveImage(i.url)) || [];
 
+  const videoIds = videoMap[destination.id] ?? [];
+
   return (
     <div className="details-container fade-in">
 
@@ -67,9 +71,16 @@ export default function DestinationDetails() {
         <button onClick={() => setTab("videos")}>
           <span className="qi-icon">🎬</span>
           Videos
-          {(videoMap[destination.id]?.length ?? 0) > 0
-            ? <span className="video-badge">{videoMap[destination.id].length}</span>
-            : <span className="video-badge video-badge--soon">•</span>
+          {
+            <button onClick={() => setTab("videos")}>
+              <span className="qi-icon">🎬</span>
+              Videos
+              {videoIds.length > 0
+                ? <span className="video-badge">{videoIds.length}</span>
+                : <span className="video-badge video-badge--soon">•</span>
+              }
+            </button>
+
           }
         </button>
 
@@ -111,9 +122,10 @@ export default function DestinationDetails() {
         <button onClick={() => setTab("gallery")} className={tab === "gallery" ? "active" : ""}>Gallery</button>
         <button onClick={() => setTab("videos")} className={tab === "videos" ? "active" : ""}>
           Videos
-          {(videoMap[destination.id]?.length ?? 0) > 0
-            ? <span className="video-badge">{videoMap[destination.id].length}</span>
-            : <span className="video-badge video-badge--soon">•</span>
+          {
+            videoIds.length > 0
+              ? <span className="video-badge">{videoIds.length}</span>
+              : <span className="video-badge video-badge--soon">•</span>
           }
         </button>
 
@@ -143,44 +155,6 @@ export default function DestinationDetails() {
         </div>
       )}
 
-      {/* VIDEO SECTION */}
-      {/*       {(() => {
-        const videoIds = videoMap[destination.id] ?? [];
-        return videoIds.length > 0 ? (
-          <div className="details-section details-videos">
-            <h2>🤿 Snorkel Explorer Videos</h2>
-            {videoIds.map(id => (
-              <div key={id} className="details-video-embed">
-                <iframe
-                  width="100%"
-                  style={{ aspectRatio: "16/9", border: "none", borderRadius: "10px" }}
-                  src={`https://www.youtube.com/embed/${id}`}
-                  title={`${destination.name} — Snorkel Explorer`}
-                  allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                  allowFullScreen
-                />
-              </div>
-            ))}
-          </div>
-        ) : (
-          <div className="details-video-soon">
-            <div className="dvs-icon">🤿</div>
-            <p className="dvs-title">Video guide coming soon</p>
-            <p className="dvs-sub">
-              We're heading to {destination.name} — subscribe to be the first to see it.
-            </p>
-            <a
-              href="https://www.youtube.com/@SnorkelExplorer"
-              target="_blank"
-              rel="noreferrer"
-              className="dvs-cta"
-            >
-              Subscribe on YouTube →
-            </a>
-          </div>
-        );
-      })()}
- */}
       {/* SHOWCASE */}
       {tab === "showcase" && (
         <div className="tab-content fade-in">
@@ -210,47 +184,24 @@ export default function DestinationDetails() {
           />
         </div>
       )}
+
       {/* VIDEOS */}
       {tab === "videos" && (
         <div className="tab-content fade-in">
-          {(() => {
-            const videoIds = videoMap[destination.id] ?? [];
-            return videoIds.length > 0 ? (
-              <div className="details-videos">
-                <h2>🤿 Snorkel Explorer Videos</h2>
-                {videoIds.map(id => (
-                  <div key={id} className="details-video-embed">
-                    <iframe
-                      width="100%"
-                      style={{ aspectRatio: "16/9", border: "none", borderRadius: "10px" }}
-                      src={`https://www.youtube.com/embed/${id}`}
-                      title={`${destination.name} — Snorkel Explorer`}
-                      allow="accelerometer; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                      allowFullScreen
-                    />
-                  </div>
-                ))}
-              </div>
-            ) : (
-              <div className="details-video-soon">
-                <div className="dvs-icon">🤿</div>
-                <p className="dvs-title">Video guide coming soon</p>
-                <p className="dvs-sub">
-                  We're heading to {destination.name} — subscribe to be the first to see it.
-                </p>
-                <a
-                  href="https://www.youtube.com/@SnorkelExplorer"
-                  target="_blank"
-                  rel="noreferrer"
-                  className="dvs-cta"
-                >
-                  Subscribe on YouTube →
-                </a>
-              </div>
-            );
-          })()}
+          {videoIds.length > 0
+            ? videoIds.map(id => (
+              <VideoEmbed
+                key={id}
+                videoId={id}
+                title={`${destination.name} — Snorkel Explorer`}
+                destinationName={destination.name}
+              />
+            ))
+            : <VideoEmbed videoId={null} destinationName={destination.name} />
+          }
         </div>
       )}
+
 
       {/* FISHLIFE */}
       {tab === "fish" && (

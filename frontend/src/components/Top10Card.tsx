@@ -12,7 +12,7 @@ interface Top10CardProps {
 
 export default function Top10Card({ destination, rank, onImageClick }: Top10CardProps) {
   const { primary, heroImages } = getDestinationImages(destination);
-  const videoIds = videoMap[destination.id] ?? [];
+  const videoIds = videoMap[Number(destination.id)] ?? [];
 
   const allImages = [
     ...(primary ? [primary] : []),

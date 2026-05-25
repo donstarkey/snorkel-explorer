@@ -1,4 +1,4 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import { useAutoScrollCarousel } from "../hooks/useAutoScrollCarousel";
 import "../styles/ImageCarousel.css";
 
@@ -11,21 +11,13 @@ export default function ImageCarousel({
 }) {
   const [index, setIndex] = useState(0);
   const [isPaused, setPaused] = useState(false);
-  const containerRef = useRef(null);
 
   useAutoScrollCarousel({
     enabled: autoScroll,
     delay: scrollDelay,
     itemCount: images.length,
     pauseSignal: isPaused,
-    onIndexChange: (i) => {
-      setIndex(i);
-      containerRef.current?.children[i]?.scrollIntoView({
-        behavior: "smooth",
-        inline: "center",
-        block: "nearest",
-      });
-    },
+    onIndexChange: setIndex, // ← no more scrollIntoView
   });
 
   return (
@@ -34,22 +26,26 @@ export default function ImageCarousel({
       onMouseEnter={() => setPaused(true)}
       onMouseLeave={() => setPaused(false)}
     >
-      <div className="carousel" ref={containerRef}>
-        {images.map((img, i) => (
-          <img
-            key={i}
-            src={img.url}
-            alt=""
-            className="carousel-image"
-            onClick={() => {
-                if (onImageClick) {
+      <div className="carousel-viewport">
+        <div
+          className="carousel-track"
+          style={{ transform: `translateX(-${index * 100}%)` }}
+        >
+          {images.map((img, i) => (
+            <div key={i} className="carousel-slide">
+              <img
+                src={img.url}
+                alt=""
+                onClick={() => {
+                  if (onImageClick) {
                     setPaused(true);
                     onImageClick(i);
-                }
-            }}
-
-          />
-        ))}
+                  }
+                }}
+              />
+            </div>
+          ))}
+        </div>
       </div>
 
       {showThumbnails && (
@@ -59,14 +55,7 @@ export default function ImageCarousel({
               key={i}
               src={img.url}
               className={`thumb ${i === index ? "active" : ""}`}
-              onClick={() => {
-                setIndex(i);
-                containerRef.current?.children[i]?.scrollIntoView({
-                  behavior: "smooth",
-                  inline: "center",
-                  block: "nearest",
-                });
-              }}
+              onClick={() => setIndex(i)}
             />
           ))}
         </div>

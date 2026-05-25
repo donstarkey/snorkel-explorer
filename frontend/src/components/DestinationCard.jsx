@@ -1,80 +1,49 @@
+import { useNavigate } from "react-router-dom";
 import BaseDestinationCard from "./BaseDestinationCard";
-
-import { Link } from "react-router-dom";
+import ImageCarousel from "./ImageCarousel";
+import { videoMap } from "../data/videoMap";
+import "../styles/DestinationCard.css";
 
 export default function DestinationCard({ destination }) {
-
-  // Debug log
-  console.log("CARD RECEIVED DESTINATION:", destination);
-
-  // Resolve image whether it's a string or object
-  const resolveImage = (img) => {
-    if (!img) return null;
-    if (typeof img === "string") return img;
-    if (typeof img === "object") return img.url || null;
-    return null;
-  };
-
+  const navigate = useNavigate();
   const { primary, heroImages } = BaseDestinationCard(destination);
+  const videoIds = videoMap[Number(destination.id)] ?? [];
 
-
-  // Primary image
- /*  const primary = resolveImage(destination?.primaryImage);
-console.warn("**primary resolved = ", primary);
-  // Hero images
-  const heroImages = Array.isArray(destination?.heroImages)
-    ? destination.heroImages.map(resolveImage)
-    : []; */
+  // Primary first, then heroes
+  const carouselImages = [
+    ...(primary ? [{ url: primary }] : []),
+    ...heroImages.map(url => ({ url })),
+  ];
 
   return (
-    <div
-      style={{
-        padding: "12px",
-        border: "1px solid #ddd",
-        borderRadius: "8px",
-        marginBottom: "20px",
-        background: "#fafafa"
-      }}
-    >
+    <div className="destination-card">
 
-      {/* PRIMARY IMAGE */}
-      
-      
-      {primary && (
-        <Link to={`/destinations/${destination.id}`}>
-          <img
-            src={primary}
-            alt={destination.name}
-            style={{ width: "300px", height: "200px", background: "yellow", border: "3px solid red" }}
+      {/* CAROUSEL — click image navigates to detail */}
+      <div className="destination-card-media">
+        <ImageCarousel
+          images={carouselImages}
+          autoScroll={true}
+          scrollDelay={4000}
+          showThumbnails={false}
+          onImageClick={() => navigate(`/destinations/${destination.id}`)}
+        />
+      </div>
 
-          />
-        </Link>
-      )}
-
-      {/* HERO IMAGES STACKED */}
-      {heroImages.length > 0 && (
-        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
-          {heroImages.map((img, i) => (
-            <img
-              key={i}
-              src={img}
-              alt={`${destination.name} hero ${i + 1}`}
-              style={{
-                width: "100%",
-                height: "160px",
-                objectFit: "cover",
-                borderRadius: "8px",
-                background: "#ddd"
-              }}
-            />
-          ))}
+      {/* INFO ROW */}
+      <div
+        className="destination-card-info"
+        onClick={() => navigate(`/destinations/${destination.id}`)}
+      >
+        <div>
+          <h2 className="destination-card-name">{destination.name}</h2>
+          <p className="destination-card-country">{destination.country}</p>
         </div>
-      )}
 
-      {/* INFO */}
-      <div style={{ marginTop: "12px" }}>
-        <h2 style={{ margin: 0 }}>{destination.name}</h2>
-        <p style={{ margin: "4px 0 0 0" }}>{destination.country}</p>
+        {/* VIDEO BADGE */}
+        {videoIds.length > 0
+          ? <span className="video-badge">{videoIds.length} 🎬</span>
+          : <span className="video-badge video-badge--soon">•</span>
+        }
       </div>
 
     </div>

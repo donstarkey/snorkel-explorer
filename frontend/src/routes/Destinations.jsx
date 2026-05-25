@@ -36,10 +36,11 @@ export default function Destinations() {
 
       {!isLoading && !isError && (
         <div className="grid fade-in-stagger">
-          {destinations.map((d) => (
+          {destinations.map((d, i) => (
             <DestinationCard
               key={d.id}
               destination={d}
+              scrollDelay={4000 + i * 600}   // 4s, 4.6s, 5.2s, 5.8s...
               className="fade-in"
             />
           ))}

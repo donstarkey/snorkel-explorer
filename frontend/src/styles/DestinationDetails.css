@@ -378,48 +378,6 @@
   margin-bottom: 1.5rem;
 }
 
-/* ── Coming soon (detail page) ── */
-.details-video-soon {
-  background: #0A1628;
-  border-radius: 10px;
-  padding: 2rem 1.5rem;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 0.5rem;
-  text-align: center;
-  margin-top: 2rem;
-}
-
-.dvs-icon {
-  font-size: 2rem;
-}
-
-.dvs-title {
-  color: #fff;
-  font-size: 1rem;
-  font-weight: 600;
-  margin: 0;
-}
-
-.dvs-sub {
-  color: #90E0EF;
-  font-size: 0.875rem;
-  margin: 0;
-  max-width: 300px;
-}
-
-.dvs-cta {
-  color: #00B4D8;
-  font-size: 0.875rem;
-  font-weight: 600;
-  text-decoration: none;
-  margin-top: 0.25rem;
-}
-
-.dvs-cta:hover {
-  text-decoration: underline;
-}
 
 .guide-notes-header {
   display: flex;
