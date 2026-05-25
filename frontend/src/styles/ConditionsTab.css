@@ -1,0 +1,92 @@
+/* ================================
+   CONDITIONS TAB — SCOPED + CLEAN
+================================ */
+
+.conditions-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 32px;
+  padding: 20px;
+}
+
+.conditions-section {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+}
+
+.conditions-section h2 {
+  margin-bottom: 16px;
+  color: #0a3d62;
+  font-size: 1.4rem;
+  font-weight: 700;
+}
+
+/* ================================
+   GRID
+================================ */
+
+.conditions-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+  gap: 16px;
+}
+
+.condition-item {
+  background: #f7fbff;
+  padding: 12px;
+  border-radius: 8px;
+  text-align: center;
+}
+
+.condition-item .label {
+  display: block;
+  font-size: 0.85rem;
+  color: #4a6fa1;
+}
+
+.condition-item .value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #0a3d62;
+}
+
+/* ================================
+   STORM HISTORY
+================================ */
+
+.storm-item {
+  padding: 12px 0;
+  border-bottom: 1px solid #e5e5e5;
+}
+
+.storm-item:last-child {
+  border-bottom: none;
+}
+
+.storm-header {
+  display: flex;
+  justify-content: space-between;
+  font-weight: 600;
+}
+
+.storm-severity {
+  margin-top: 4px;
+  color: #0a3d62;
+}
+
+.storm-notes {
+  margin-top: 6px;
+  font-size: 0.9rem;
+  color: #555;
+}
+
+/* ================================
+   EMPTY STATE
+================================ */
+
+.empty-text {
+  color: #777;
+  font-style: italic;
+}

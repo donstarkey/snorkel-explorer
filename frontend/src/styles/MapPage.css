@@ -1,3 +1,7 @@
+/* ================================
+   MAP PAGE — SCOPED + CLEAN
+================================ */
+
 .map-wrapper {
   width: 100%;
   height: calc(100vh - 60px);
@@ -8,6 +12,7 @@
   height: 100%;
 }
 
+/* Popup content */
 .popup {
   text-align: center;
   max-width: 200px;
@@ -19,6 +24,7 @@
   margin: 8px 0;
 }
 
+/* Google Maps link */
 .google-link {
   display: inline-block;
   margin-top: 6px;

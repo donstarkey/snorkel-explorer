@@ -1,0 +1,42 @@
+/* ================================
+   QUICK ICON BAR (Destination Details)
+================================ */
+
+.quick-icons {
+  display: flex;
+  justify-content: center;
+  gap: 18px;
+  margin: 20px 0 28px;
+  flex-wrap: wrap;
+}
+
+.quick-icons button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 16px;
+  background: #f0f4f8;
+  border: 1px solid #d6e4f0;
+  border-radius: 10px;
+  cursor: pointer;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: #0a3d62;
+  transition: background 0.2s ease, color 0.2s ease, border 0.2s ease;
+}
+
+.quick-icons button:hover {
+  background: #e3eef7;
+}
+
+.quick-icons button.active {
+  background: #0077b6;
+  border-color: #0077b6;
+  color: white;
+}
+
+.qi-icon {
+  font-size: 1.1rem;
+  display: flex;
+  align-items: center;
+}

@@ -1,0 +1,66 @@
+/* ================================
+   IMAGE CAROUSEL — SCOPED + CLEAN
+================================ */
+
+.carousel-wrapper {
+  width: 100%;
+  overflow: hidden;
+}
+
+/* Main horizontal scroll track */
+.carousel {
+  display: flex;
+  gap: 10px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+/* Main images */
+.carousel-image {
+  height: 260px;
+  width: 100%;          /* ← REQUIRED */
+  flex: 0 0 100%;       /* ← REQUIRED */
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+  scroll-snap-align: center;
+}
+
+
+/* ================================
+   THUMBNAILS
+================================ */
+
+.thumb-strip {
+  display: flex;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  padding-bottom: 8px;
+}
+
+.thumb-strip::-webkit-scrollbar {
+  display: none;
+}
+
+.thumb {
+  width: 70px;
+  height: 50px;
+  object-fit: cover;
+  border-radius: 4px;
+  cursor: pointer;
+  opacity: 0.6;
+  transition: opacity 0.2s ease, border 0.2s ease;
+  flex: 0 0 auto;          /* ← REQUIRED */
+  scroll-snap-align: center; /* ← REQUIRED */
+}
+
+.thumb.active {
+  opacity: 1;
+  border: 2px solid white;
+}
+

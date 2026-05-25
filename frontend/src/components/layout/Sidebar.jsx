@@ -14,7 +14,7 @@ export default function Sidebar({ isOpen, onClose }) {
             left: 0,
             right: 0,
             bottom: 0,
-            background: "rgba(0,0,0,0.4)",
+            background: "rgba(236, 223, 223, 0.4)",
             zIndex: 999,
           }}
         />

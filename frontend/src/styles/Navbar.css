@@ -1,0 +1,58 @@
+/* ================================
+   NAVBAR — ELEGANT SNORKEL EXPLORER
+================================ */
+
+.navbar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #0a3d62; /* deep ocean blue */
+  border-bottom: 1px solid rgba(255, 255, 255, 0.15);
+}
+
+/* BRAND SECTION */
+.navbar-brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.navbar-logo {
+  height: 34px;
+  width: 34px;
+  object-fit: contain;
+  display: block;
+}
+
+.navbar-title {
+  color: #dff3ff;
+  font-size: 1.35rem;
+  font-weight: 700;
+  letter-spacing: 0.4px;
+}
+
+/* NAV LINKS */
+.navbar-links {
+  display: flex;
+  gap: 20px;
+}
+
+.navbar-links a {
+  color: #dff3ff;
+  text-decoration: none;
+  font-weight: 500;
+  padding: 6px 12px;
+  border-radius: 6px;
+  transition: background 0.2s ease, color 0.2s ease;
+}
+
+.navbar-links a:hover {
+  background: rgba(255, 255, 255, 0.12);
+  color: white;
+}
+
+.navbar-links a.active {
+  background: #38ada9; /* tropical teal */
+  color: white;
+}

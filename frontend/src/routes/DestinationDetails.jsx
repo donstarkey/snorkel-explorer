@@ -1,295 +1,232 @@
-import { useEffect, useState, useCallback } from "react";
-import { useParams, Link } from "react-router-dom";
-const API = import.meta.env.VITE_API_URL;
+import { useParams } from "react-router-dom";
+import { useQuery } from "@tanstack/react-query";
+import { useState } from "react";
+import { resolveImage } from "../utils/imageResolver";
+import { getDestination } from "../api/client";
+import ImageCarousel from "../components/ImageCarousel";
+import ImageModal from "../components/ImageModal";
+import ConditionsTab from "../components/ConditionsTab";
+import SnorkelMap from "../components/SnorkelMap";
 import "../styles/DestinationDetails.css";
-import useEmblaCarousel from "embla-carousel-react";
+import "../styles/QuickLinkTabs.css";
+
 
 export default function DestinationDetails() {
   const { id } = useParams();
-  const [destination, setDestination] = useState(null);
-  const [activeTab, setActiveTab] = useState("overview");
+  const [tab, setTab] = useState("overview");
 
-  const [emblaRef, emblaApi] = useEmblaCarousel({ loop: false });
-  const [thumbsRef, thumbsApi] = useEmblaCarousel({
-    containScroll: "keepSnaps",
-    dragFree: true,
+  //new modal code
+  const [modalIndex, setModalIndex] = useState(null);
+  const [modalImages, setModalImages] = useState([]);
+
+  const openModal = (images, startIndex) => {
+  setModalImages(images);
+  setModalIndex(startIndex);
+};
+
+const closeModal = () => setModalIndex(null);
+
+const navigateModal = (i) => {
+  if (i < 0) i = modalImages.length - 1;
+  if (i >= modalImages.length) i = 0;
+  setModalIndex(i);
+};
+
+
+  const { data: destination, isLoading, error } = useQuery({
+    queryKey: ["destination", id],
+    queryFn: () => getDestination(id),
   });
 
-  const [selectedIndex, setSelectedIndex] = useState(0);
+  if (isLoading) return <p>Loading...</p>;
+  if (error || !destination) return <p>Failed to load destination.</p>;
 
-  const onThumbClick = useCallback(
-    (index) => {
-      if (!emblaApi) return;
-      emblaApi.scrollTo(index);
-      setSelectedIndex(index);
-    },
-    [emblaApi]
-  );
+  // Extract images
+  const primary = destination.images?.find(i => i.type === "Primary")?.url;
 
-  const API_BASE = "http://localhost:5000";
+  const heroes = destination.images
+    ?.filter(i => i.type === "Hero")
+    .map(i => resolveImage(i.url)) || [];
 
-  useEffect(() => {
-    if (!emblaApi) return;
-    emblaApi.on("select", () => {
-      setSelectedIndex(emblaApi.selectedScrollSnap());
-    });
-  }, [emblaApi]);
-
-  useEffect(() => {
-    async function load() {
-      try {
-        const res = await fetch(fetch(`${API}/api/Destinations/${id}`));
-        const data = await res.json();
-        setDestination(data);
-      } catch (err) {
-        console.error("Failed to load destination:", err);
-      }
-    }
-    load();
-  }, [id]);
-
-  if (!destination) {
-    return <p className="loading fade-in">Loading...</p>;
-  }
+  const gallery = destination.images
+    ?.filter(i => i.type === "Gallery")
+    .map(i => resolveImage(i.url)) || [];
 
   return (
     <div className="details-container fade-in">
 
-      {/* HERO */}
-      <div className="details-hero-wrapper fade-in-slow">
+      {/* QUICK ICON BAR */}
+      <div className="quick-icons">
+        <button onClick={() => setTab("overview")}>
+          <span className="qi-icon">🛈</span>
+          Overview
+        </button>
+
+        <button onClick={() => setTab("conditions")}>
+          <span className="qi-icon">🌤</span>
+          Conditions
+        </button>
+
+        <button onClick={() => setTab("sites")}>
+          <span className="qi-icon">📍</span>
+          Sites
+        </button>
+
+        <button onClick={() => window.location.href = "/map"}>
+          <span className="qi-icon">🗺️</span>
+          Map
+        </button>
+
+        <button onClick={() => setTab("reports")}>
+          <span className="qi-icon">📝</span>
+          Reports
+        </button>
+      </div>
+
+      {/* PRIMARY HERO */}
+      <div className="primary-hero-wrapper">
         <img
-          src={`${API_BASE}${destination.primaryImage}`}
+          src={resolveImage(primary)}
           alt={destination.name}
           className="details-hero"
         />
       </div>
 
-      {/* TITLE */}
-      <h1 className="details-title fade-in-slow">{destination.name}</h1>
-
-      {/* QUICK FACTS */}
-      <div className="quick-facts">
-        <div>📍 {destination.name}</div>
-        <div>🌊 Avg Depth: {destination.avgDepth ?? "--"} ft</div>
-        <div>👁 Visibility: {destination.avgVisibility ?? "--"} ft</div>
-        <div>⭐ Difficulty: {destination.difficulty ?? "--"}</div>
-      </div>
-
       {/* TABS */}
-      <div className="details-tabs fade-in">
-        <button className={activeTab === "overview" ? "active" : ""} onClick={() => setActiveTab("overview")}>📘 Overview</button>
-        <button className={activeTab === "fishlife" ? "active" : ""} onClick={() => setActiveTab("fishlife")}>🐟 FishLife</button>
-        <button className={activeTab === "storms" ? "active" : ""} onClick={() => setActiveTab("storms")}>⛈ Storms</button>
-        <button className={activeTab === "gallery" ? "active" : ""} onClick={() => setActiveTab("gallery")}>🖼 Gallery</button>
-        <button className={activeTab === "reports" ? "active" : ""} onClick={() => setActiveTab("reports")}>📝 Reports</button>
-        <button className={activeTab === "conditions" ? "active" : ""} onClick={() => setActiveTab("conditions")}>🌤 Conditions</button>
+      <div className="details-tabs">
+        <button onClick={() => setTab("overview")} className={tab === "overview" ? "active" : ""}>Overview</button>
+        <button onClick={() => setTab("showcase")} className={tab === "showcase" ? "active" : ""}>Showcase</button>
+        <button onClick={() => setTab("gallery")} className={tab === "gallery" ? "active" : ""}>Gallery</button>
+        <button onClick={() => setTab("fish")} className={tab === "fish" ? "active" : ""}>FishLife</button>
+        <button onClick={() => setTab("conditions")} className={tab === "conditions" ? "active" : ""}>Conditions</button>
+        <button onClick={() => setTab("reports")} className={tab === "reports" ? "active" : ""}>Reports</button>
+        <button onClick={() => setTab("sites")} className={tab === "sites" ? "active" : ""}>Sites</button>
       </div>
 
-      {/* TAB CONTENT */}
-      <div className="details-tab-content fade-in">
+      {/* OVERVIEW */}
+      {tab === "overview" && (
+        <div className="tab-content fade-in">
+          <h1 className="details-title">{destination.name}</h1>
+          <p className="details-description">{destination.description}</p>
 
-        {/* OVERVIEW TAB */}
-        {activeTab === "overview" && (
-          <div className="details-section">
-
-            <h2>Overview</h2>
-            <p className="details-description">{destination.description}</p>
-
-            {/* SNORKEL SITES */}
-            <div className="details-subsection">
-              <h3>🪸 Top Snorkel Sites</h3>
-              <ul className="dive-list">
-                {destination.sites?.map((s, i) => (
-                  <li key={i}>
-                    <strong>{s.name}</strong> — {s.depth} ft — {s.visibility} ft visibility
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* VIDEOS */}
-            <div className="details-subsection">
-              <h3>🎥 Videos</h3>
-              <div className="video-grid">
-                {destination.videos?.map((v, i) => (
-                  <iframe key={i} src={v} title={`video-${i}`} loading="lazy"></iframe>
-                ))}
-              </div>
-            </div>
-
-            {/* SPECIES */}
-            <div className="details-subsection">
-              <h3>🐠 Marine Species</h3>
-              <ul className="species-list">
-                {destination.species?.map((sp, i) => (
-                  <li key={i}>{sp}</li>
-                ))}
-              </ul>
-            </div>
-
-            {/* TRAVEL GUIDE */}
-            <div className="details-subsection">
-              <h3>📘 Travel Guide</h3>
+          {destination.guide && (
+            <div className="details-section">
+              <h2>Guide Notes</h2>
               <p>{destination.guide}</p>
             </div>
+          )}
+        </div>
+      )}
 
-          </div>
-        )}
+      {/* SHOWCASE */}
+      {tab === "showcase" && (
+        <div className="tab-content fade-in">
+          <h2>Showcase</h2>
 
-        {/* FISHLIFE TAB */}
-        {activeTab === "fishlife" && (
-          <div className="details-section">
-            <h2>FishLife Score</h2>
-            <div className="fishlife-bar">
-              <div className="fishlife-bar-fill" style={{ width: `${destination.fishLife?.score ?? 0}%` }}></div>
+          <ImageCarousel
+            images={heroes.map(url => ({ url }))}
+            autoScroll={true}
+            scrollDelay={4500}
+            showThumbnails={false}
+            onImageClick={(i) => openModal(heroes.map(url => ({ url })), i)}
+          />
+        </div>
+      )}
+
+      {/* GALLERY */}
+      {tab === "gallery" && (
+        <div className="tab-content fade-in">
+          <h2>Gallery</h2>
+
+          <ImageCarousel
+            images={gallery.map(url => ({ url }))}
+            autoScroll={true}
+            scrollDelay={3500}
+            showThumbnails={true}
+            onImageClick={(i) => openModal(gallery.map(url => ({ url })), i)}
+          />
+        </div>
+      )}
+
+      {/* FISHLIFE */}
+      {tab === "fish" && (
+        <div className="tab-content fade-in">
+          <h2>FishLife Score</h2>
+          <p><strong>Score:</strong> {destination.fishLife?.score}</p>
+          <p>{destination.fishLife?.notes}</p>
+        </div>
+      )}
+
+      {/* CONDITIONS */}
+      {tab === "conditions" && (
+        <div className="tab-content fade-in">
+          <ConditionsTab destination={destination} />
+        </div>
+      )}
+
+      {/* REPORTS */}
+      {tab === "reports" && (
+        <div className="tab-content fade-in">
+          <h2>Recent Reports</h2>
+          {destination.reports?.map((r, i) => (
+            <div key={i} className="report-card">
+              <p><strong>{r.userName}</strong></p>
+              <p>{r.reportText}</p>
+              <p className="report-date">{new Date(r.createdAt).toLocaleDateString()}</p>
             </div>
-            <p className="fishlife-note">Higher scores indicate healthier, more biodiverse marine ecosystems.</p>
+          ))}
+        </div>
+      )}
+
+      {/* SITES */}
+{/* SITES */}
+{tab === "sites" && (
+  <div className="tab-content fade-in sites-tab">
+    <h2>Snorkel Sites</h2>
+
+    {/* GRID OF SITE CARDS */}
+    <div className="sites-grid">
+      {destination.sites?.map((site, i) => (
+        <div key={i} className="site-card">
+          <h3>{site.name}</h3>
+          <p>{site.description}</p>
+
+          <div className="site-meta">
+            <p><strong>Difficulty:</strong> {site.difficulty || "—"}</p>
+            <p><strong>Depth:</strong> {site.depth} ft</p>
+            <p><strong>Visibility:</strong> {site.visibility} ft</p>
           </div>
-        )}
+        </div>
+      ))}
+    </div>
 
-        {/* STORMS TAB */}
-        {activeTab === "storms" && (
-          <div className="details-section">
-            <h2>Storm History</h2>
-            {destination.stormHistory?.length > 0 ? (
-              <ul className="storm-timeline">
-                {destination.stormHistory.map((storm, i) => (
-                  <li key={i}><strong>{storm.year}</strong> — {storm.category}</li>
-                ))}
-              </ul>
-            ) : (
-              <div className="gallery-empty">No storm history available</div>
-            )}
-          </div>
-        )}
+    {/* MAP OF SNORKEL SITES */}
+    {destination.sites?.length > 0 && (
+      <section className="sites-map-section">
+        <h2>Map of Snorkel Sites</h2>
 
-        {/* GALLERY TAB */}
-        {activeTab === "gallery" && (
-          <div className="details-section">
-            <h2>Photo Gallery</h2>
+        <SnorkelMap
+          center={{
+            lat: destination.sites[0].latitude,
+            lng: destination.sites[0].longitude,
+          }}
+          sites={destination.sites}
+        />
+      </section>
+    )}
+  </div>
+)}
 
-            {/* ARROWS */}
-            <div className="embla-arrows">
-              <button className="embla-arrow embla-arrow--prev" onClick={() => emblaApi?.scrollPrev()}>‹</button>
-              <button className="embla-arrow embla-arrow--next" onClick={() => emblaApi?.scrollNext()}>›</button>
-            </div>
 
-            {destination.gallery?.length > 0 ? (
-              <>
-                <div className="embla" ref={emblaRef}>
-                  <div className="embla__container">
-                    {destination.gallery.map((img, i) => (
-                      <div className="embla__slide" key={i}>
-                        <img
-                          //src={`${API_BASE}${img}`}                          
-                          src={`${API}${img}`}
-                          alt=""
-                          className="embla__slide__img"
-                        />
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                <div className="embla-thumbs" ref={thumbsRef}>
-                  <div className="embla-thumbs__container">
-                    {destination.gallery.map((img, i) => (
-                      <button
-                        key={i}
-                        className={`embla-thumbs__slide ${selectedIndex === i ? "is-selected" : ""}`}
-                        onClick={() => onThumbClick(i)}
-                      >
-                        <img
-                          src={`${API_BASE}${img}`}
-                          alt=""
-                          className="embla-thumbs__img"
-                        />
-                      </button>
-                    ))}
-                  </div>
-                </div>
-              </>
-            ) : (
-              <div className="gallery-empty">No photos available</div>
-            )}
-          </div>
-        )}
-
-        {/* REPORTS TAB */}
-        {activeTab === "reports" && (
-          <div className="details-section">
-            <h2>Field Reports</h2>
-            {destination.reports?.length > 0 ? (
-              <ul className="reports-list">
-                {destination.reports.map((r, i) => (
-                  <li key={i}>
-                    <strong>{r.date}</strong> — {r.text}
-                  </li>
-                ))}
-              </ul>
-            ) : (
-              <div className="gallery-empty">No field reports yet</div>
-            )}
-          </div>
-        )}
-
-        {/* CONDITIONS TAB */}
-        {activeTab === "conditions" && (
-          <div className="details-section">
-
-            {/* WEATHER */}
-            <div className="details-subsection">
-              <h3>Current Weather</h3>
-              <div className="weather-inline">
-                🌤 {destination.weather?.temp ?? "--"}°F |
-                💨 {destination.weather?.wind ?? "--"} mph |
-                🌊 {destination.weather?.waterTemp ?? "--"}°F |
-                🔆 UV {destination.weather?.uv ?? "--"}
-              </div>
-            </div>
-
-            {/* BEST TIME TO VISIT */}
-            <div className="details-subsection">
-              <h3>Best Time to Visit</h3>
-              <div className="besttime-chart">
-                {destination.bestTime?.map((m, i) => (
-                  <div key={i} className="besttime-bar">
-                    <span>{m.month}</span>
-                    <div className="bar-fill" style={{ width: `${m.score}%` }}></div>
-                  </div>
-                ))}
-              </div>
-            </div>
-
-            {/* MAP */}
-            <div className="details-subsection">
-              <h3>Map</h3>
-              <iframe
-                className="map-frame"
-                src={destination.mapEmbed}
-                loading="lazy"
-                title="map"
-              ></iframe>
-            </div>
-
-          </div>
-        )}
-
-      </div>
-
-      {/* CTA */}
-      <div className="details-cta-wrapper fade-in">
-        <Link to="/" className="details-cta-button">
-          View Full Guide
-        </Link>
-      </div>
-
-      {/* STICKY CTA */}
-      <div className="sticky-cta">
-        <Link to="/" className="sticky-cta-button">
-          View Full Guide
-        </Link>
-      </div>
+      {/* MODAL img on click */}
+      {modalIndex !== null && (
+        <ImageModal
+          images={modalImages}
+          index={modalIndex}
+          onClose={closeModal}
+          onNavigate={navigateModal}
+        />
+      )}
 
     </div>
   );

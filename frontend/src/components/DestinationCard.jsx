@@ -1,67 +1,82 @@
+import BaseDestinationCard from "./BaseDestinationCard";
+
 import { Link } from "react-router-dom";
-import "../styles/DestinationCard.css";
 
-const COUNTRY_FLAGS = {
-  "United States": "us",
-  "USA": "us",
-  "Honduras": "hn",
-  "Caribbean Netherlands": "bq",
-  "Bonaire": "bq",
-  "Curaçao": "cw",
-  "Turks & Caicos": "tc",
-  "United Kingdom": "gb",
-  "Australia": "au",
-  "Mexico": "mx",
-  "Belize": "bz",
-  "Bahamas": "bs",
-  "Fiji": "fj",
-  "French Polynesia": "pf",
-  "Bora Bora": "pf",
-  "Barbados": "bb",
-  "Cayman Islands": "ky",
-  "Hawaii": "us",
-  "Maui": "us"
-};
+export default function DestinationCard({ destination }) {
 
-const getFlagUrl = (country) => {
-  if (!country) return null;
-  const code = COUNTRY_FLAGS[country.trim()];
-  return code ? `https://flagcdn.com/48x36/${code}.png` : null;
-};
+  // Debug log
+  console.log("CARD RECEIVED DESTINATION:", destination);
 
-export default function DestinationCard({ destination, rank, className = "" }) {
-  const imgSrc = destination.primaryImage
-    ? `http://localhost:5000${destination.primaryImage}`
-    : "/images/default-hero.jpg";
+  // Resolve image whether it's a string or object
+  const resolveImage = (img) => {
+    if (!img) return null;
+    if (typeof img === "string") return img;
+    if (typeof img === "object") return img.url || null;
+    return null;
+  };
+
+  const { primary, heroImages } = BaseDestinationCard(destination);
+
+
+  // Primary image
+ /*  const primary = resolveImage(destination?.primaryImage);
+console.warn("**primary resolved = ", primary);
+  // Hero images
+  const heroImages = Array.isArray(destination?.heroImages)
+    ? destination.heroImages.map(resolveImage)
+    : []; */
 
   return (
-    <Link
-      to={`/destinations/${destination.id}`}
-      className={`card ${className} fade-in`}
+    <div
+      style={{
+        padding: "12px",
+        border: "1px solid #ddd",
+        borderRadius: "8px",
+        marginBottom: "20px",
+        background: "#fafafa"
+      }}
     >
-      {rank && <div className="card-rank">#{rank}</div>}
 
-      <img src={imgSrc} alt={destination.name} />
+      {/* PRIMARY IMAGE */}
+      
+      
+      {primary && (
+        <Link to={`/destinations/${destination.id}`}>
+          <img
+            src={primary}
+            alt={destination.name}
+            style={{ width: "300px", height: "200px", background: "yellow", border: "3px solid red" }}
 
-      <div className="card-content">
-        <h3 className="card-title">{destination.name}</h3>
+          />
+        </Link>
+      )}
 
-        <div className="card-country-row">
-          {getFlagUrl(destination.country) && (
+      {/* HERO IMAGES STACKED */}
+      {heroImages.length > 0 && (
+        <div style={{ display: "flex", flexDirection: "column", gap: "10px" }}>
+          {heroImages.map((img, i) => (
             <img
-              src={getFlagUrl(destination.country)}
-              alt={destination.country}
-              className="card-flag"
-              onError={(e) => (e.target.style.display = "none")}
+              key={i}
+              src={img}
+              alt={`${destination.name} hero ${i + 1}`}
+              style={{
+                width: "100%",
+                height: "160px",
+                objectFit: "cover",
+                borderRadius: "8px",
+                background: "#ddd"
+              }}
             />
-          )}
-          <span className="card-country">{destination.country}</span>
+          ))}
         </div>
+      )}
 
-        {destination.description && (
-          <p className="card-description">{destination.description}</p>
-        )}
+      {/* INFO */}
+      <div style={{ marginTop: "12px" }}>
+        <h2 style={{ margin: 0 }}>{destination.name}</h2>
+        <p style={{ margin: "4px 0 0 0" }}>{destination.country}</p>
       </div>
-    </Link>
+
+    </div>
   );
 }

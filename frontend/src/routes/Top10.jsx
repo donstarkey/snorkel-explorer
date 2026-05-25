@@ -1,39 +1,57 @@
-import { useEffect, useState } from "react";
-import DestinationCard from "../components/DestinationCard";
-const API = import.meta.env.VITE_API_URL;
-import "../styles/Destinations.css"; // shared grid + layout styles
+import React, { useState } from "react";
+import { useQuery } from "@tanstack/react-query";
+import Top10Card from "../components/Top10Card";
+import ImageModal from "../components/ImageModal";
+import { getDestinations } from "../api/client";
+import "../styles/Top10.css";
+
+//import { getDestinations } from "../api/destinations"; // adjust path if needed
 
 export default function Top10() {
-  const [list, setList] = useState([]);
+  const { data: destinations = [] } = useQuery({
+    queryKey: ["destinations"],
+    queryFn: getDestinations
+  });
 
-  useEffect(() => {
-    async function load() {
-      try {
-        
-        const res = await fetch(`${API}/api/Destinations`);
-        const data = await res.json();
-        setList(data);
-      } catch (err) {
-        console.error("Failed to load Top 10:", err);
-      }
-    }
-    load();
-  }, []);
+  const [modalImages, setModalImages] = useState([]);
+  const [modalIndex, setModalIndex] = useState(0);
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const openModal = (images, index) => {
+    setModalImages(images);
+    setModalIndex(index);
+    setIsModalOpen(true);
+  };
+
+  const navigateModal = (newIndex) => {
+    if (newIndex < 0) return;
+    if (newIndex >= modalImages.length) return;
+    setModalIndex(newIndex);
+  };
 
   return (
-    <div className="top10 fade-in">
-      <h1 className="fade-in-slow">Top 10 Snorkeling Destinations</h1>
+    <div className="page-container">
+      <h1 className="page-title">Top Snorkel Destinations</h1>
 
-      <div className="grid fade-in-stagger">
-        {list.map((d, i) => (
-          <DestinationCard
+      <div className="top10-grid">
+        {destinations.map((d, i) => (
+          <Top10Card
             key={d.id}
             destination={d}
             rank={i + 1}
-            className="fade-in"
+            onImageClick={openModal}
           />
         ))}
       </div>
+
+      {isModalOpen && (
+        <ImageModal
+          images={modalImages}
+          index={modalIndex}
+          onClose={() => setIsModalOpen(false)}
+          onNavigate={navigateModal}
+        />
+      )}
     </div>
   );
 }
